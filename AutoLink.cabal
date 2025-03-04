@@ -18,8 +18,7 @@ common warnings
 
 library
     import:           warnings
-    exposed-modules:  MyLib
-                    , DirectoryTraverse
+    exposed-modules:  DirectoryTraverse
     -- other-modules:
     -- other-extensions:
     build-depends:    base ^>=4.20.0.0
