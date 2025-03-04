@@ -1,19 +1,14 @@
 module Main where
 
-import Control.Monad
-import System.Directory
+import qualified Data.Text.IO as TextIO
 import System.Environment
-import System.FilePath
+import Text.Parsec
 
-import DirectoryTraverse
+import CMakeParse
 
 main :: IO ()
 main = do
   args <- getArgs
-  traverseDirectoryTree (\p _ -> do
-    isCmakeDir <- doesFileExist (p </> "CMakeLists.txt")
-    if (isCmakeDir)
-      then putStrLn p *> return [p]
-      else return []
-    ) (args !! 0)
+  file <- TextIO.readFile (args !! 0)
+  print $ parse parseCMake (args !! 0) file
   return ()
