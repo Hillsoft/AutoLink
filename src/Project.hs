@@ -52,8 +52,8 @@ data ProjectTarget = ProjectTarget {
   }
   deriving Show
 
-extractTargets :: CMakeFile -> [ProjectTarget]
-extractTargets rawFile =
+extractTargetDefinitions :: CMakeFile -> [ProjectTarget]
+extractTargetDefinitions rawFile =
   let
     commands = stripCommandsFromFile rawFile
     targetDefinitionCommands = filter ((`Set.member` targetDefinitionCommandNames) . commandIdent) commands
@@ -79,3 +79,18 @@ extractLinkCommands rawFile =
     makeDeps (CMakeStrippedCommandInvocation  _ args) =
       (argumentValue $ head args
       , filter (not . (`Set.member` linkTypeSpecifiers)) $ fmap argumentValue $ tail args)
+
+extractTargets :: CMakeFile -> [ProjectTarget]
+extractTargets rawFile =
+  let
+    definitions = extractTargetDefinitions rawFile
+  in
+    fmap addDeps definitions
+  where
+    addDeps target =
+      target {
+        dependencies =
+          dependencies target
+          ++ Map.findWithDefault [] (targetName target) links
+      }
+    links = extractLinkCommands rawFile
