@@ -3,6 +3,8 @@ module Project
   , extractTargets
   ) where
 
+import Data.Map (Map)
+import qualified Data.Map as Map
 import Data.Set (Set)
 import qualified Data.Set as Set
 import Data.Text (Text)
@@ -23,6 +25,18 @@ targetTypeSpecifiers = Set.fromList
   , "MODULE"
   , "INTERFACE"
   , "EXCLUDE_FROM_ALL"
+  ]
+
+linkCommandNames :: Set Text
+linkCommandNames = Set.fromList
+  [ "target_link_libraries"
+  ]
+
+linkTypeSpecifiers :: Set Text
+linkTypeSpecifiers = Set.fromList
+  [ "PRIVATE"
+  , "PUBLIC"
+  , "INTERFACE"
   ]
 
 commandIdent :: CMakeStrippedCommandInvocation -> Text
@@ -51,3 +65,17 @@ extractTargets rawFile =
         (argumentValue $ head args)
         (filter (not . (`Set.member` targetTypeSpecifiers)) $ fmap argumentValue $ tail args)
         []
+
+extractLinkCommands :: CMakeFile -> Map Text [Text]
+extractLinkCommands rawFile =
+  let
+    commands = stripCommandsFromFile rawFile
+    linkCommands = filter ((`Set.member` linkCommandNames) . commandIdent) commands
+  in
+    Map.fromListWith
+      (++)
+      $ fmap makeDeps linkCommands
+  where
+    makeDeps (CMakeStrippedCommandInvocation  _ args) =
+      (argumentValue $ head args
+      , filter (not . (`Set.member` linkTypeSpecifiers)) $ fmap argumentValue $ tail args)
