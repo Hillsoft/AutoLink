@@ -1,5 +1,16 @@
 module CMakeParse
   ( parseCMake
+  , CMakeFile (..)
+  , CMakeFileElement (..)
+  , CMakeLineEnding (..)
+  , CMakeCommandInvocation (..)
+  , CMakeIdentifier (..)
+  , CMakeArguments (..)
+  , CMakeSeperatedArguments (..)
+  , CMakeSeparation (..)
+  , CMakeArgument (..)
+  , CMakeBracketComment (..)
+  , CMakeLineComment (..)
   ) where
 
 import Control.Monad
