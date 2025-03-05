@@ -19,6 +19,7 @@ common warnings
 library
     import:           warnings
     exposed-modules:  CMakeParse
+                    , CMakeUtils
                     , DirectoryTraverse
     -- other-modules:
     -- other-extensions:
