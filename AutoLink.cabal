@@ -21,9 +21,13 @@ library
     exposed-modules:  CMakeParse
                     , CMakeUtils
                     , DirectoryTraverse
+                    , Project
     -- other-modules:
     -- other-extensions:
+    default-extensions:
+        OverloadedStrings
     build-depends:    base ^>=4.20.0.0
+                    , containers
                     , directory
                     , filepath
                     , parsec

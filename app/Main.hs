@@ -5,7 +5,7 @@ import System.Environment
 import Text.Parsec
 
 import CMakeParse
-import CMakeUtils
+import Project
 
 main :: IO ()
 main = do
@@ -16,5 +16,5 @@ main = do
     Left e -> print e
     Right cmake -> do
       print cmake
-      print $ stripCommandsFromFile cmake
+      print $ extractTargets cmake
   return ()
